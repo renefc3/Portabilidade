@@ -16,6 +16,7 @@ namespace Portabilidade.Tests.Entities
     public class SolicitacaoMoqTests
     {
         private Mock<ISqliteRepository<Solicitacao>> mock;
+        //private ISqliteRepository<Solicitacao> objetoAlvoTeste;
 
         private string CPF_INVALIDO = "179.506.820-99";
         private string CPF_VALIDO = "179.506.820-51";
@@ -30,6 +31,9 @@ namespace Portabilidade.Tests.Entities
         [TestInitialize]
         public void InicializarMockObject()
         {
+            //objetoAlvoTeste = new SqliteSolicitacaoRepository();
+            // Se utilizar uma interface que crie a conexão com o banco consegue até mockar ela aqui :) 
+            
             mock = new Mock<ISqliteRepository<Solicitacao>>(MockBehavior.Default);
 
             mock.Setup(s => s.Incluir(It.IsAny<Solicitacao>())).Returns((new ValueTask()));
@@ -139,11 +143,16 @@ namespace Portabilidade.Tests.Entities
             solicitacao.AdicionarAtivo(ativo1);
             solicitacao.AdicionarAtivo(ativo2);
 
+            
             //Act
-            mock.Object.Incluir(solicitacao);
-            mock.Object.Excluir(Convert.ToString(localGuid));
-            var resultadoMock = mock.Object.Obter(Convert.ToString(Guid.Parse("906d319a-2f3a-4fc4-91aa-ed9699da2b54")));
-            var listaMock = mock.Object.Listar();
+            //Para testar é interessante não usar mock, o correto é usar  o objeto concreto mesmo, acredito que se separar em interfaces diferente consegue fazer o mesmo cenario sem utilizar o objeto mock
+            //OUTRO PONTO: o //ACT normalmente deve ser no maximo umas 2 linhas exatamente para testar apenas um ponto por vez facilitando a identificação do problema mais facil  qualquer pré requisito fazer no arrange
+            //objetoAlvoTeste.Incluir(solicitacao)
+            mock.Object.Incluir(solicitacao); // 1°Teste: Testar_IncluirSolicitacao_deve_efetuarInclusaoComSucesso
+            mock.Object.Excluir(Convert.ToString(localGuid));//2°Teste: Testar_ExcluirSolicitacaoExistente_deve_RemoverSolicitacaoComSucesso
+            var resultadoMock = mock.Object.Obter(Convert.ToString(Guid.Parse("906d319a-2f3a-4fc4-91aa-ed9699da2b54")));//3°Teste: Testar_BuscarPorIdSolicitacaoExistente_deve_retornarSolicitacaoEsperada
+            //var resultadoMock = mock.Object.Obter(Convert.ToString(Guid.Empty));//4°Teste: Testar_BuscarPorIdSolicitacaoNaoExistente_deve_retornarSolicitacaoNull
+            var listaMock = mock.Object.Listar(); //5ºTeste: Testar_ListarSolicitacoes_DeveRetornarListaSolicitacoesEsperadas
 
             //Assert
             mock.Verify();
