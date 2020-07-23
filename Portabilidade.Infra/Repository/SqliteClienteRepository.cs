@@ -14,13 +14,30 @@ namespace Portabilidade.Infra.Repository
 {
     public sealed class SqliteClienteRepository : SqliteBaseRepository, ISqliteRepository<Cliente>
     {
-
+        
+        //private interface IClienteValidator _clienteValidator;
+        
+        //public  SqliteClienteRepository(IClienteValidator clienteValidator){
+        //    _clienteValidator = clienteValidator;
+        //}
+        
+        //Transformar esse metodo em asynx tambem 
+        //public Task CriarTabela()
         public void CriarTabela()
         {
+            // as vezes inverter a condição é melhor para não colocar o codigo muito para a "direita" isso ajuda a leitura
+            //if (!File.Exists(DbFile))
+            //{
+            //    return; 
+            //}
+            
             if (File.Exists(DbFile))
             {
                 using (IDbConnection cnn = SimpleDbConnection())
                 {
+                    //await cnn.OpenAsync();
+                    //await cnn.ExecuteAsync(createTable);
+                    //await cnn.CloseAsync();
                     cnn.Open();
                     cnn.Execute(
                         @"create table if not exists cliente
@@ -47,6 +64,8 @@ namespace Portabilidade.Infra.Repository
                 Cliente cliente = new Cliente(Convert.ToString(data.cliente.nome), Convert.ToString(data.cliente.documentoCpf), Convert.ToString(data.cliente.endereco));
                 var validatorCliente = new ClienteValidator();
                 var validResCliente = validatorCliente.Validate(cliente);
+                //  var validResCliente = _clienteValidator.Validate(cliente);
+                
                 //cd . Console.WriteLine("CPF Cliente OK SQLite? => " + (new CpfValidador(cliente.DocumentoCpf)).EstaValido());
                 Console.WriteLine("Cliente OK SQLite? => " + validResCliente.IsValid);
                 Console.WriteLine(cliente.Nome);
