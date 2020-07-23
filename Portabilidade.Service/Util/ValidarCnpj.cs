@@ -4,6 +4,30 @@ using System.Linq;
 
 namespace Portabilidade.Service.Util
 {
+    /*
+    public class ValidarStrategy : IValidarStrategy{
+        IValidarCnpj _validarCnpj;
+        IValidarCpf _validarCpf;
+        
+        protected ValidarStrategy(IValidarCnpj validarCnpj, IValidarCpf validarCpf){
+          _validarCnpj = validarCnpj;
+         _validarCpf = validarCpf;
+        }
+        
+        public bool Validar(string cnpj)
+        {
+         //conteudo do metodo de validar usando o _validarCnpj e _validarCpf
+        }
+    }
+    
+    public interface IValidarCnpj {
+        bool IsValid(string cnpj);
+    }
+    
+    public class ValidarCnpj : IValidarCnpj{
+    // Implementação
+    }
+    */
     public class ValidarCnpj : IValidarStrategy
     {
 
